@@ -18,10 +18,10 @@ export default {
       wordList: [],
       // Current text index from word list
       currentTextIndex: 0,
-      // Interval ID (avoid to start twice the game loop)
+      // Interval ID (avoid to start twice the round loop)
       intervalID: 0,
       // True if loop is paused
-      gameLoopPaused: false,
+      roundLoopPaused: false,
     }
   },
 
@@ -54,10 +54,10 @@ export default {
   },
 
   methods: {
-    // Start game loop
-    startGameLoop() {
+    // Start round loop
+    startRoundLoop() {
       // If a loop is running we don't do anything
-      if (this.isGameLoopRunning())
+      if (this.isRoundLoopRunning())
         return
       
       // Copy alphabet so we don't override our base list
@@ -72,39 +72,38 @@ export default {
 
       // then do it every X seconds and stop when there is no letter left to discover
       this.intervalID = setInterval( () => { 
-        // Don't do anything if game loop is paused
-        if (this.gameLoopPaused)
+        // Don't do anything if round loop is paused
+        if (this.roundLoopPaused)
           return
           
-        
          discoverNextLetter()
         
         if (alphabetTmp.length == 0) {
-          this.stopGameLoop()
+          this.stopRoundLoop()
         }
       }, this.timeLetterAppearsMS)
     },
 
     // Return true if a loop is in progress
-    isGameLoopRunning() {
+    isRoundLoopRunning() {
       return this.intervalID != 0
     },
 
-    // Pause game loop if running, resume it otherwise
+    // Pause round loop if running, resume it otherwise
     // Do not do anything unless a loop is started
-    switchGameLoopState() {
-        this.gameLoopPaused = !this.gameLoopPaused
+    switchRoundLoopState() {
+        this.roundLoopPaused = !this.roundLoopPaused
     }, 
 
-    // Force stop game loop
-    stopGameLoop() {
+    // Force stop round loop
+    stopRoundLoop() {
         clearInterval(this.intervalID)
         this.intervalID = 0
     },
 
     // Next word
     nextWord() {
-      this.stopGameLoop()
+      this.stopRoundLoop()
       // use splice to update vue.js bidnings
       this.discoveredLetters.splice(0,this.discoveredLetters.length)
 
@@ -153,11 +152,11 @@ export default {
       <span v-else>_ </span>
   </span>
   <br>
-  <button @click="startGameLoop" v-if="!isGameLoopRunning()">
+  <button @click="startRoundLoop" v-if="!isRoundLoopRunning()">
     Start
   </button>
-  <button v-if="isGameLoopRunning()" @click="switchGameLoopState()" ref="pauseBtn">
-    <span v-if="gameLoopPaused">Resume</span>
+  <button v-if="isRoundLoopRunning()" @click="switchRoundLoopState()" ref="pauseBtn">
+    <span v-if="RoundLoopPaused">Resume</span>
     <span v-else>Pause</span>
   </button>
   <button @click="nextWord()">
