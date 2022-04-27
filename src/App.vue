@@ -3,7 +3,8 @@ export default {
   data() {
     return {
       // > CONFIG 
-
+      // Name of the word list file
+      wordListFile: "wordList.txt",
       // Text to guess (TODO : load from file)
       text: "vive le démenagement".split(""),
       // Time (ms) in which the letters will appear
@@ -15,13 +16,22 @@ export default {
       discoveredLetters: [],
       // Base alphabet (z to a)
       alphabet: "abcdefghijklmnopqrstuvwxyz".split("").reverse(),
+      // Word list
+      wordList: [],
       // Interval ID (avoid to start twice the game loop)
       intervalID: 0,
       // True if loop is paused
-      gameLoopPaused: false 
+      gameLoopPaused: false,
     }
   },
 
+  // Constructor
+  created() {
+    // Load word list
+    // https://stackoverflow.com/questions/54697757/read-file-inside-current-directory-using-vue
+    const wordListFileContents = require('./'+ this.wordListFile).default;
+    this.wordList = wordListFileContents.split(/\r?\n/)
+  },
 
   methods: {
     // Start game loop
@@ -31,14 +41,14 @@ export default {
         return
       
       // Copy alphabet so we don't override our base list
-      var alphabet_tmp = [...this.alphabet];
+      var alphabetTmp = [...this.alphabet];
       // Set the function 
-      const discover_next_letter = () => { 
-        this.discoveredLetters.push(alphabet_tmp.shift()) 
+      const discoverNextLetter = () => { 
+        this.discoveredLetters.push(alphabetTmp.shift()) 
       }
       
       // Discover next letter right away
-      discover_next_letter()
+      discoverNextLetter()
 
       // then do it every X seconds and stop when there is no letter left to discover
       this.intervalID = setInterval( () => { 
@@ -47,9 +57,9 @@ export default {
           return
           
         
-         discover_next_letter()
+         discoverNextLetter()
         
-        if (alphabet_tmp.length == 0) {
+        if (alphabetTmp.length == 0) {
           this.stopGameLoop()
         }
       }, this.timeLetterAppearsMS)
@@ -81,7 +91,6 @@ export default {
       const escapedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       return this.discoveredLetters.includes(escapedChar) 
     },
-
 
     // Handle global key press
     handleGlobalKeyPress(keyPressCode) {
