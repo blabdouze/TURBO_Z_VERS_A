@@ -155,12 +155,8 @@ export default {
    {{c}}
   </span>
   <br>
-  <!--
-  <span v-for="char in text" class="text-transition text-color-transparent" :class="{'text-color-base':  discovered(char) }">
-  {{char}}
-  </span>
-  -->
-  <span v-for="char in currentText" :key="char">
+  <!--We use index as a key to prevent refresh issues-->
+  <span v-for="(char,index) in currentText" :key="index">
    <span v-if="isCharDiscovered(char)">{{char}}</span>
    <div v-else-if="char === ' '"></div>
       <span v-else>_ </span>
