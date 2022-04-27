@@ -176,7 +176,7 @@ export default {
   </p>
 </template>
 
-<style>
+<style scoped>
   .text-color-transparent {
     color: transparent
   }
