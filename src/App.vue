@@ -153,7 +153,7 @@ export default {
       <span v-else>_ </span>
   </span>
   <br>
-  <button @click="startGameLoop">
+  <button @click="startGameLoop" v-if="!isGameLoopRunning()">
     Start
   </button>
   <button v-if="isGameLoopRunning()" @click="switchGameLoopState()" ref="pauseBtn">
