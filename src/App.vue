@@ -17,7 +17,7 @@ export default {
       // Word list
       wordList: [],
       // Current text index from word list
-      currentTextIndex: 0,
+      currentWordIndex: 0,
       // Interval ID (avoid to start twice the round loop)
       intervalID: 0,
       // True if loop is paused
@@ -46,16 +46,26 @@ export default {
     // Get current text based on word list and current index
     currentText() {
       // if the index is invalid we return an empty string (should not happen)
-      if (this.currentTextIndex >= this.wordList.length)
+      if (this.currentWordIndex >= this.wordList.length)
         return "";
       
-      return this.wordList[this.currentTextIndex].split("")
+      return this.wordList[this.currentWordIndex].split("")
     },
 
     // Return true if a loop is in progress
     isRoundLoopRunning() {
       return this.intervalID != 0
     },
+
+    // Numer of words
+    wordCount() {
+      return this.wordList.length
+    },
+
+    // Retrun true if a new set of word is available
+    hasNextWord() {
+       return this.currentWordIndex + 1 < this.wordList.length
+    }
   },
 
   methods: {
@@ -101,13 +111,17 @@ export default {
         this.intervalID = 0
     },
 
-    // Next word
-    nextWord() {
+    // Restart round state back to its original value
+    restartRoundState() {
       this.stopRoundLoop()
       // use splice to update vue.js bidnings
       this.discoveredLetters.splice(0,this.discoveredLetters.length)
+    },
 
-      this.currentTextIndex++
+    // Reset the round state and display the new word 
+    nextWord() {
+      this.restartRoundState()
+      this.currentWordIndex++
     },
 
     // Return true if char has been discovered ; false otherwise
@@ -156,12 +170,14 @@ export default {
     Start
   </button>
   <button v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
-    <span v-if="RoundLoopPaused">Resume</span>
+    <span v-if="roundLoopPaused">Resume</span>
     <span v-else>Pause</span>
   </button>
-  <button @click="nextWord()">
-    next
-  </button>
+  <button @click="nextWord()" v-if="hasNextWord">next</button>
+
+  <p>
+    Words count : {{currentWordIndex+1}} / {{wordCount}}
+  </p>
 </template>
 
 <style>
