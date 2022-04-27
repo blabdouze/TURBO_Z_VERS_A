@@ -16,7 +16,9 @@ export default {
       // Base alphabet (z to a)
       alphabet: "abcdefghijklmnopqrstuvwxyz".split("").reverse(),
       // Interval ID (avoid to start twice the game loop)
-      intervalID: 0
+      intervalID: 0,
+      // True if loop is paused
+      gameLoopPaused: false 
     }
   },
 
@@ -25,7 +27,7 @@ export default {
     // Start game loop
     startGameLoop() {
       // If a loop is running we don't do anything
-      if (this.isLoopRunning())
+      if (this.isGameLoopRunning())
         return
       
       // Copy alphabet so we don't override our base list
@@ -40,6 +42,11 @@ export default {
 
       // then do it every X seconds and stop when there is no letter left to discover
       this.intervalID = setInterval( () => { 
+        // Don't do anything if game loop is paused
+        if (this.gameLoopPaused)
+          return
+          
+        
          discover_next_letter()
         
         if (alphabet_tmp.length == 0) {
@@ -49,9 +56,15 @@ export default {
     },
 
     // Return true if a loop is in progress
-    isLoopRunning() {
+    isGameLoopRunning() {
       return this.intervalID != 0
     },
+
+    // Pause game loop if running, resume it otherwise
+    // Do not do anything unless a loop is started
+    switchGameLoopState() {
+        this.gameLoopPaused = !this.gameLoopPaused
+    }, 
 
     // Force stop game loop
     stopGameLoop() {
@@ -65,14 +78,28 @@ export default {
     //            (e.g isCharDiscovered('è') will return true if e have been discovered)
     isCharDiscovered(char) {
       // Remove accents from char
-      const escaped_char = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      return this.discoveredLetters.includes(escaped_char) 
+      const escapedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      return this.discoveredLetters.includes(escapedChar) 
+    },
+
+
+    // Handle global key press
+    handleGlobalKeyPress(keyPressCode) {
+      // When space pressed
+      if (keyPressCode.which == 32 ) {
+        const pauseBtn = this.$refs.pauseBtn
+        // Check if btn exist and click on it
+        if (pauseBtn)
+          pauseBtn.click()
+      }
     }
   }
 }
 </script>
 
 <template>
+  <keyboard-events @keydown="handleGlobalKeyPress"/>
+
   <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }">
    {{c}}
   </span>
@@ -89,7 +116,11 @@ export default {
   </span>
   <br>
   <button @click="startGameLoop">
-    go
+    Start
+  </button>
+  <button v-if="isGameLoopRunning()" @click="switchGameLoopState()" ref="pauseBtn">
+    <span v-if="gameLoopPaused">Resume</span>
+    <span v-else>Pause</span>
   </button>
 </template>
 

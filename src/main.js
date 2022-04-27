@@ -1,4 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import KeyboardEvents from './components/KeyboardEvents'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+app.component('keyboard-events', KeyboardEvents)
+app.mount('#app')
