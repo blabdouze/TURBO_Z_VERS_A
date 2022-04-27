@@ -3,10 +3,8 @@ export default {
   data() {
     return {
       // > CONFIG 
-      // Name of the word list file
-      wordListFile: "wordList.txt",
-      // Text to guess (TODO : load from file)
-      text: "vive le démenagement".split(""),
+      // Name of the word list file (path relative to App.vue)
+      wordListFile: 'wordList.txt',
       // Time (ms) in which the letters will appear
       timeLetterAppearsMS: 1000,
 
@@ -18,6 +16,8 @@ export default {
       alphabet: "abcdefghijklmnopqrstuvwxyz".split("").reverse(),
       // Word list
       wordList: [],
+      // Current text index from word list
+      currentTextIndex: 0,
       // Interval ID (avoid to start twice the game loop)
       intervalID: 0,
       // True if loop is paused
@@ -25,12 +25,32 @@ export default {
     }
   },
 
-  // Constructor
-  created() {
+  // action when data is loaded but dom not yet loaded
+  beforeMount() {
     // Load word list
     // https://stackoverflow.com/questions/54697757/read-file-inside-current-directory-using-vue
     const wordListFileContents = require('./'+ this.wordListFile).default;
-    this.wordList = wordListFileContents.split(/\r?\n/)
+    
+    // Don't load if content of file is empty
+    if (wordListFileContents != "")
+      this.wordList = wordListFileContents.split(/\r?\n/)
+
+    // It is a bit sad to have no words, so we add one by default
+    if (this.wordList.length == 0) {
+      this.wordList.push("TURBO K SPACE HIPPY");
+    }
+  },
+
+  // Computed properties
+  computed: {
+    // Get current text based on word list and current index
+    currentText() {
+      // if the index is invalid we return an empty string (should not happen)
+      if (this.currentTextIndex >= this.wordList.length)
+        return "";
+      
+      return this.wordList[this.currentTextIndex].split("")
+    }
   },
 
   methods: {
@@ -82,6 +102,15 @@ export default {
         this.intervalID = 0
     },
 
+    // Next word
+    nextWord() {
+      this.stopGameLoop()
+      // use splice to update vue.js bidnings
+      this.discoveredLetters.splice(0,this.discoveredLetters.length)
+
+      this.currentTextIndex++
+    },
+
     // Return true if char has been discovered ; false otherwise
     //
     // /!\ Note : the function will get rid of any accent before checking.
@@ -91,7 +120,7 @@ export default {
       const escapedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       return this.discoveredLetters.includes(escapedChar) 
     },
-
+    
     // Handle global key press
     handleGlobalKeyPress(keyPressCode) {
       // When space pressed
@@ -118,7 +147,7 @@ export default {
   {{char}}
   </span>
   -->
-  <span v-for="char in text" :key="char">
+  <span v-for="char in currentText" :key="char">
    <span v-if="isCharDiscovered(char)">{{char}}</span>
    <div v-else-if="char === ' '"></div>
       <span v-else>_ </span>
@@ -130,6 +159,9 @@ export default {
   <button v-if="isGameLoopRunning()" @click="switchGameLoopState()" ref="pauseBtn">
     <span v-if="gameLoopPaused">Resume</span>
     <span v-else>Pause</span>
+  </button>
+  <button @click="nextWord()">
+    next
   </button>
 </template>
 
