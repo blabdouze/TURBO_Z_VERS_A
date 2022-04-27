@@ -113,11 +113,11 @@ export default {
 
     // Return true if char has been discovered ; false otherwise
     //
-    // /!\ Note : the function will get rid of any accent before checking.
+    // /!\ Note : the function will get rid of any accent before checking and is case insentive.
     //            (e.g isCharDiscovered('è') will return true if e have been discovered)
     isCharDiscovered(char) {
       // Remove accents from char
-      const escapedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      const escapedChar = char.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
       return this.discoveredLetters.includes(escapedChar) 
     },
     
