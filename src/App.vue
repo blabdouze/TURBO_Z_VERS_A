@@ -50,14 +50,19 @@ export default {
         return "";
       
       return this.wordList[this.currentTextIndex].split("")
-    }
+    },
+
+    // Return true if a loop is in progress
+    isRoundLoopRunning() {
+      return this.intervalID != 0
+    },
   },
 
   methods: {
     // Start round loop
     startRoundLoop() {
       // If a loop is running we don't do anything
-      if (this.isRoundLoopRunning())
+      if (this.isRoundLoopRunning)
         return
       
       // Copy alphabet so we don't override our base list
@@ -82,11 +87,6 @@ export default {
           this.stopRoundLoop()
         }
       }, this.timeLetterAppearsMS)
-    },
-
-    // Return true if a loop is in progress
-    isRoundLoopRunning() {
-      return this.intervalID != 0
     },
 
     // Pause round loop if running, resume it otherwise
@@ -152,10 +152,10 @@ export default {
       <span v-else>_ </span>
   </span>
   <br>
-  <button @click="startRoundLoop" v-if="!isRoundLoopRunning()">
+  <button @click="startRoundLoop" v-if="!isRoundLoopRunning">
     Start
   </button>
-  <button v-if="isRoundLoopRunning()" @click="switchRoundLoopState()" ref="pauseBtn">
+  <button v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
     <span v-if="RoundLoopPaused">Resume</span>
     <span v-else>Pause</span>
   </button>
