@@ -3,8 +3,6 @@ export default {
   data() {
     return {
       // > CONFIG 
-      // Name of the word list file (path relative to App.vue)
-      wordListFile: 'wordList.txt',
       // Time (ms) in which the letters will appear
       timeLetterAppearsMS: 1000,
 
@@ -15,29 +13,13 @@ export default {
       // Base alphabet (z to a)
       alphabet: "abcdefghijklmnopqrstuvwxyz".split("").reverse(),
       // Word list
-      wordList: [],
+      wordList: ["TURBO K SPACE HIPPY"],
       // Current text index from word list
       currentWordIndex: 0,
       // Interval ID (avoid to start twice the round loop)
       intervalID: 0,
       // True if loop is paused
       roundLoopPaused: false,
-    }
-  },
-
-  // action when data is loaded but dom not yet loaded
-  beforeMount() {
-    // Load word list
-    // https://stackoverflow.com/questions/54697757/read-file-inside-current-directory-using-vue
-    const wordListFileContents = require('./'+ this.wordListFile).default;
-    
-    // Don't load if content of file is empty
-    if (wordListFileContents != "")
-      this.wordList = wordListFileContents.split(/\r?\n/)
-
-    // It is a bit sad to have no words, so we add one by default
-    if (this.wordList.length == 0) {
-      this.wordList.push("TURBO K SPACE HIPPY");
     }
   },
 
@@ -134,14 +116,26 @@ export default {
       return this.discoveredLetters.includes(escapedChar) 
     },
     
+    // Load text file from input
+    loadTextFile(ev) {
+        const reader = new FileReader();
+        const file = ev.target.files[0];
+        reader.onload = (e) => {
+          this.wordList = e.target.result.split(/\r?\n/)
+        }
+        reader.readAsText(file)
+    },
+
     // Handle global key press
     handleGlobalKeyPress(keyPressCode) {
       // When space pressed
-      if (keyPressCode.which == 32 ) {
+      if (keyPressCode.code == "Space" ) {
         const pauseBtn = this.$refs.pauseBtn
         // Check if btn exist and click on it
         if (pauseBtn)
           pauseBtn.click()
+      } else if (keyPressCode.code == "KeyO") {
+        this.$refs.textInput.click()
       }
     }
   }
@@ -174,6 +168,8 @@ export default {
   <p>
     Words count : {{currentWordIndex+1}} / {{wordCount}}
   </p>
+
+  <input type="file" ref="textInput" accept=".txt" style="display: none;" @change="loadTextFile"/>
 </template>
 
 <style scoped>
