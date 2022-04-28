@@ -13,7 +13,12 @@ export default {
       // Base alphabet (z to a)
       alphabet: "abcdefghijklmnopqrstuvwxyz".split("").reverse(),
       // Word list
-      wordList: ["TURBO K SPACE HIPPY"],
+      wordList: [ 
+        {
+          theme: "ESPACE VROUM",
+          words: "TURBO K SPACE HIPPY"
+        }
+      ],
       // Current text index from word list
       currentWordIndex: 0,
       // Interval ID (avoid to start twice the round loop)
@@ -25,13 +30,33 @@ export default {
 
   // Computed properties
   computed: {
+
     // Get current text based on word list and current index
     currentText() {
+      const cData = this.currentRoundData
       // if the index is invalid we return an empty string (should not happen)
-      if (this.currentWordIndex >= this.wordList.length)
-        return "";
+      if (cData == undefined)
+        return ""
       
-      return this.wordList[this.currentWordIndex].split("")
+      return cData.words.split("")
+    },
+
+    // Get current theme
+    currentTheme() {
+      const cData = this.currentRoundData
+      // if the index is invalid we return an empty string (should not happen)
+      if (cData == undefined)
+        return ""
+      
+      return cData.theme
+    },
+
+    // Helper function to get current round data
+    currentRoundData() {
+      if (this.currentWordIndex >= this.wordList.length)
+        return undefined;
+
+      return this.wordList[this.currentWordIndex]
     },
 
     // Return true if a loop is in progress
@@ -94,7 +119,7 @@ export default {
     },
 
     // Restart round state back to its original value
-    restartRoundState() {
+    resetRoundState() {
       this.stopRoundLoop()
       // use splice to update vue.js bidnings
       this.discoveredLetters.splice(0,this.discoveredLetters.length)
@@ -102,7 +127,7 @@ export default {
 
     // Reset the round state and display the new word 
     nextWord() {
-      this.restartRoundState()
+      this.resetRoundState()
       this.currentWordIndex++
     },
 
@@ -121,7 +146,8 @@ export default {
         const reader = new FileReader();
         const file = ev.target.files[0];
         reader.onload = (e) => {
-          this.wordList = e.target.result.split(/\r?\n/)
+          this.resetRoundState();
+          this.wordList = JSON.parse(e.target.result)
         }
         reader.readAsText(file)
     },
@@ -145,10 +171,16 @@ export default {
 <template>
   <keyboard-events @keydown="handleGlobalKeyPress"/>
 
+ <span>
+    Theme : {{currentTheme}}
+  </span>
+  <br>
+  <br>
   <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }">
    {{c}}
   </span>
   <br>
+
   <!--We use index as a key to prevent refresh issues-->
   <span v-for="(char,index) in currentText" :key="index">
    <span v-if="isCharDiscovered(char)">{{char}}</span>
@@ -169,7 +201,7 @@ export default {
     Words count : {{currentWordIndex+1}} / {{wordCount}}
   </p>
 
-  <input type="file" ref="textInput" accept=".txt" style="display: none;" @change="loadTextFile"/>
+  <input type="file" ref="textInput" accept=".json" style="display: none;" @change="loadTextFile"/>
 </template>
 
 <style scoped>
