@@ -4,7 +4,7 @@ export default {
     return {
       // > CONFIG 
       // Time (ms) in which the letters will appear
-      timeLetterAppearsMS: 1000,
+      timeLetterAppearsMS: 500,
 
       // > CLASS MEMBERS
 
@@ -173,22 +173,41 @@ export default {
   <keyboard-events @keydown="handleGlobalKeyPress"/>
 
  <v-main>
-  <span>
-      Theme : {{currentTheme}}
-    </span>
-    <br>
-    <br>
-    <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }">
-    {{c}}
-    </span>
+    <v-container>
+      <v-row justify="center">
+        <v-sheet width="500" elevation="5" class="text-center">
+          <span>{{currentTheme}}</span>
+        </v-sheet>
+      </v-row>
+    </v-container>
+
+    <v-container>
+      <v-row justify="center">
+        <v-sheet width="550" elevation="5" class="text-center">
+          <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }" style="padding-left:10px;">{{c}}</span>
+        </v-sheet>
+      </v-row>
+    </v-container>
+
     <br>
 
     <!--We use index as a key to prevent refresh issues-->
-    <span v-for="(char,index) in currentText" :key="index">
+    <!-- <span v-for="(char,index) in currentText" :key="index">
     <span v-if="isCharDiscovered(char)">{{char}}</span>
     <div v-else-if="char === ' '"></div>
         <span v-else>_ </span>
-    </span>
+    </span> -->
+
+   <v-container>
+     <v-row align="center">
+        <v-col v-for="(char,index) in currentText" :key="index">
+          <v-sheet v-if="char !== ' '" elevation="5" height="30" width="30" class="text-center" style="padding: 10% 0;">
+            <p class="text-transition" :class="{'text-color-transparent': !isCharDiscovered(char) }">{{char}}</p>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-container>
+
     <br>
     <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning">
       Start
@@ -202,6 +221,9 @@ export default {
     <p>
       Words count : {{currentWordIndex+1}} / {{wordCount}}
     </p>
+
+
+ 
 
     <input type="file" ref="textInput" accept=".json" style="display: none;" @change="loadTextFile"/>
   </v-main>
@@ -217,5 +239,8 @@ export default {
   }
 .text-transition {
   transition: 0.5s color ease;
+}
+. {
+  font-size: 24pt;
 }
 </style>
