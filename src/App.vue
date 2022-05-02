@@ -184,25 +184,24 @@ export default {
     <v-container>
       <v-row justify="center">
         <v-sheet width="550" elevation="5" class="text-center">
-          <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }" style="padding-left:10px;">{{c}}</span>
+            <span v-for="c in alphabet" :key="c" style="padding-left:10px;">
+              <Transition name="text-size">
+                <span v-if="!isCharDiscovered(c)">{{c}}</span>
+              </Transition>
+            </span>
         </v-sheet>
       </v-row>
     </v-container>
 
     <br>
 
-    <!--We use index as a key to prevent refresh issues-->
-    <!-- <span v-for="(char,index) in currentText" :key="index">
-    <span v-if="isCharDiscovered(char)">{{char}}</span>
-    <div v-else-if="char === ' '"></div>
-        <span v-else>_ </span>
-    </span> -->
-
    <v-container>
      <v-row justify="center">
         <span v-for="(char,index) in currentText" :key="index" style="padding-left:15px;">
           <v-sheet v-if="char !== ' '" elevation="5" height="30" width="30" class="text-center" style="padding: 10% 0">
-            <p class="text-transition" :class="{'text-color-transparent': !isCharDiscovered(char) }">{{char}}</p>
+            <Transition name="text-size">
+              <p v-if="isCharDiscovered(char)">{{char}}</p>
+            </Transition>
           </v-sheet>
         </span>
       </v-row>
@@ -231,16 +230,13 @@ export default {
 </template>
 
 <style scoped>
-  .text-color-transparent {
-    color: transparent
-  }
-  .text-color-base {
-    color: red
-  }
-.text-transition {
-  transition: 0.5s color ease;
+.text-size-enter-active,
+.text-size-leave-active {
+  transition: 0.5s font-size ease;
 }
-. {
-  font-size: 24pt;
+
+.text-size-enter-from,
+.text-size-leave-to {
+  font-size: 0;
 }
 </style>
