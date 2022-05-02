@@ -199,12 +199,12 @@ export default {
     </span> -->
 
    <v-container>
-     <v-row align="center">
-        <v-col v-for="(char,index) in currentText" :key="index">
-          <v-sheet v-if="char !== ' '" elevation="5" height="30" width="30" class="text-center" style="padding: 10% 0;">
+     <v-row justify="center">
+        <span v-for="(char,index) in currentText" :key="index" style="padding-left:15px;">
+          <v-sheet v-if="char !== ' '" elevation="5" height="30" width="30" class="text-center" style="padding: 10% 0">
             <p class="text-transition" :class="{'text-color-transparent': !isCharDiscovered(char) }">{{char}}</p>
           </v-sheet>
-        </v-col>
+        </span>
       </v-row>
     </v-container>
 
