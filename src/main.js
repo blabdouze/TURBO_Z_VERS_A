@@ -1,7 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import vuetify from './plugins/vuetify'
+import { loadFonts } from './plugins/webfontloader'
 import KeyboardEvents from './components/KeyboardEvents'
 
-const app = createApp(App)
-app.component('keyboard-events', KeyboardEvents)
-app.mount('#app')
+loadFonts()
+
+createApp(App)
+  .component('keyboard-events', KeyboardEvents)
+  .use(vuetify)
+  .mount('#app')

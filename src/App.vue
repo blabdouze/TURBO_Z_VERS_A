@@ -159,7 +159,7 @@ export default {
         const pauseBtn = this.$refs.pauseBtn
         // Check if btn exist and click on it
         if (pauseBtn)
-          pauseBtn.click()
+          pauseBtn.$emit('click')
       } else if (keyPressCode.code == "KeyO") {
         this.$refs.textInput.click()
       }
@@ -188,14 +188,14 @@ export default {
       <span v-else>_ </span>
   </span>
   <br>
-  <button @click="startRoundLoop" v-if="!isRoundLoopRunning">
+  <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning">
     Start
-  </button>
-  <button v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
+  </v-btn>
+  <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
     <span v-if="roundLoopPaused">Resume</span>
     <span v-else>Pause</span>
-  </button>
-  <button @click="nextWord()" v-if="hasNextWord">next</button>
+  </v-btn>
+  <v-btn @click="nextWord()" v-if="hasNextWord">next</v-btn>
 
   <p>
     Words count : {{currentWordIndex+1}} / {{wordCount}}
