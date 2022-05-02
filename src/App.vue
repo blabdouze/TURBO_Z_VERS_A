@@ -211,7 +211,7 @@ export default {
     <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning">
       Start
     </v-btn>
-    <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
+    <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" @keydown.prevent ref="pauseBtn">
       <span v-if="roundLoopPaused">Resume</span>
       <span v-else>Pause</span>
     </v-btn>
