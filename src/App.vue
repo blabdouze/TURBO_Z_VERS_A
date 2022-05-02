@@ -169,39 +169,43 @@ export default {
 </script>
 
 <template>
+ <v-app>
   <keyboard-events @keydown="handleGlobalKeyPress"/>
 
- <span>
-    Theme : {{currentTheme}}
-  </span>
-  <br>
-  <br>
-  <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }">
-   {{c}}
-  </span>
-  <br>
+ <v-main>
+  <span>
+      Theme : {{currentTheme}}
+    </span>
+    <br>
+    <br>
+    <span v-for="c in alphabet" :key="c" class="text-transition" :class="{'text-color-transparent': isCharDiscovered(c) }">
+    {{c}}
+    </span>
+    <br>
 
-  <!--We use index as a key to prevent refresh issues-->
-  <span v-for="(char,index) in currentText" :key="index">
-   <span v-if="isCharDiscovered(char)">{{char}}</span>
-   <div v-else-if="char === ' '"></div>
-      <span v-else>_ </span>
-  </span>
-  <br>
-  <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning">
-    Start
-  </v-btn>
-  <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
-    <span v-if="roundLoopPaused">Resume</span>
-    <span v-else>Pause</span>
-  </v-btn>
-  <v-btn @click="nextWord()" v-if="hasNextWord">next</v-btn>
+    <!--We use index as a key to prevent refresh issues-->
+    <span v-for="(char,index) in currentText" :key="index">
+    <span v-if="isCharDiscovered(char)">{{char}}</span>
+    <div v-else-if="char === ' '"></div>
+        <span v-else>_ </span>
+    </span>
+    <br>
+    <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning">
+      Start
+    </v-btn>
+    <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" ref="pauseBtn">
+      <span v-if="roundLoopPaused">Resume</span>
+      <span v-else>Pause</span>
+    </v-btn>
+    <v-btn @click="nextWord()" v-if="hasNextWord">next</v-btn>
 
-  <p>
-    Words count : {{currentWordIndex+1}} / {{wordCount}}
-  </p>
+    <p>
+      Words count : {{currentWordIndex+1}} / {{wordCount}}
+    </p>
 
-  <input type="file" ref="textInput" accept=".json" style="display: none;" @change="loadTextFile"/>
+    <input type="file" ref="textInput" accept=".json" style="display: none;" @change="loadTextFile"/>
+  </v-main>
+  </v-app>
 </template>
 
 <style scoped>
