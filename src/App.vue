@@ -156,10 +156,23 @@ export default {
     handleGlobalKeyPress(keyPressCode) {
       // When space pressed
       if (keyPressCode.code == "Space" ) {
-        const pauseBtn = this.$refs.pauseBtn
-        // Check if btn exist and click on it
-        if (pauseBtn)
-          pauseBtn.$emit('click')
+        // Take a btn and click on it if it exits
+        // Return true if btn exists, false otherwise
+        const clickIfExists = (btn) => {
+          if (btn) {
+            btn.$emit('click')
+            return true;
+          } 
+
+          return false;
+        };
+
+        // If the pause btn is available we click on it
+        const pauseBtnExists = clickIfExists(this.$refs.pauseBtn)
+        // Otherwise we click on the start btn
+        if (!pauseBtnExists)
+          clickIfExists(this.$refs.startBtn)
+
       } else if (keyPressCode.code == "KeyO") {
         this.$refs.textInput.click()
       }
