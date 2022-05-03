@@ -224,12 +224,12 @@ export default {
     
     <v-container>
      <v-row justify="center">
-        <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning" color="indigo"><v-icon>mdi-play</v-icon></v-btn>
+        <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning" color="indigo" @keydown.prevent ref="startBtn"><v-icon>mdi-play</v-icon></v-btn>
         <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" @keydown.prevent ref="pauseBtn" color="indigo">
            <v-icon v-if="roundLoopPaused">mdi-play</v-icon>
            <v-icon v-else>mdi-pause</v-icon>
         </v-btn>
-        <v-btn @click="nextWord()" v-if="hasNextWord"><v-icon>mdi-arrow-right</v-icon></v-btn>
+        <v-btn @click="nextWord()" v-if="hasNextWord" @keydown.prevent><v-icon>mdi-arrow-right</v-icon></v-btn>
       </v-row>
     </v-container>
 
