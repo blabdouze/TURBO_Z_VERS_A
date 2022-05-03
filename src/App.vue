@@ -208,21 +208,26 @@ export default {
     </v-container>
 
     <br>
-    <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning">
-      Start
-    </v-btn>
-    <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" @keydown.prevent ref="pauseBtn">
-      <span v-if="roundLoopPaused">Resume</span>
-      <span v-else>Pause</span>
-    </v-btn>
-    <v-btn @click="nextWord()" v-if="hasNextWord">next</v-btn>
+    
+    <v-container>
+     <v-row justify="center">
+        <v-btn @click="startRoundLoop" v-if="!isRoundLoopRunning" color="indigo"><v-icon>mdi-play</v-icon></v-btn>
+        <v-btn v-if="isRoundLoopRunning" @click="switchRoundLoopState()" @keydown.prevent ref="pauseBtn" color="indigo">
+           <v-icon v-if="roundLoopPaused">mdi-play</v-icon>
+           <v-icon v-else>mdi-pause</v-icon>
+        </v-btn>
+        <v-btn @click="nextWord()" v-if="hasNextWord"><v-icon>mdi-arrow-right</v-icon></v-btn>
+      </v-row>
+    </v-container>
 
-    <p>
-      Words count : {{currentWordIndex+1}} / {{wordCount}}
-    </p>
+    <v-container>
+      <v-row justify="center">
+        {{currentWordIndex+1}} / {{wordCount}}
+      </v-row>
+    </v-container>
 
 
- 
+
 
     <input type="file" ref="textInput" accept=".json" style="display: none;" @change="loadTextFile"/>
   </v-main>
