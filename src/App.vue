@@ -116,6 +116,7 @@ export default {
     stopRoundLoop() {
         clearInterval(this.intervalID)
         this.intervalID = 0
+        this.roundLoopPaused = false
     },
 
     // Restart round state back to its original value
