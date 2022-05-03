@@ -210,7 +210,7 @@ export default {
 
    <v-container>
      <v-row justify="center">
-        <span v-for="(char,index) in currentText" :key="index" style="padding-left:15px;">
+        <span v-for="(char,index) in currentText" :key="index" style="padding-left:15px; padding-bottom:15px;">
           <v-sheet v-if="char !== ' '" elevation="5" height="70" width="70" class="text-center" style="padding: 5% 0">
             <Transition name="text-size">
               <p v-if="isCharDiscovered(char)">{{char}}</p>
