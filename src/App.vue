@@ -76,6 +76,11 @@ export default {
   },
 
   methods: {
+    // Capitalize givent string
+    capitalize(str) {
+      return str.toUpperCase();
+    },
+
     // Start round loop
     startRoundLoop() {
       // If a loop is running we don't do anything
@@ -187,9 +192,9 @@ export default {
   <keyboard-events @keydown="handleGlobalKeyPress"/>
 
  <v-main>
-    <v-container>
+    <v-container style="padding-bottom:100px;">
       <v-row justify="center">
-        <v-sheet width="500" elevation="5" class="text-center">
+        <v-sheet width="900" elevation="5" class="text-center">
           <span>{{currentTheme}}</span>
         </v-sheet>
       </v-row>
@@ -197,7 +202,7 @@ export default {
 
     <v-container>
       <v-row justify="center">
-        <v-sheet width="900" elevation="5" class="text-center">
+        <v-sheet width="1300" elevation="5" class="text-center">
             <span v-for="c in alphabet" :key="c" style="padding-left:10px;">
               <Transition name="text-size">
                 <span v-if="!isCharDiscovered(c)">{{c}}</span>
@@ -212,11 +217,12 @@ export default {
    <v-container>
      <v-row justify="center">
         <span v-for="(char,index) in currentText" :key="index" style="padding-left:15px; padding-bottom:15px;">
-          <v-sheet v-if="char !== ' '" elevation="5" height="70" width="70" class="text-center" style="padding: 5% 0">
+          <v-sheet v-if="char !== ' '" elevation="5" height="100" width="80" class="text-center">
             <Transition name="text-size">
-              <p v-if="isCharDiscovered(char)">{{char}}</p>
+              <p v-if="isCharDiscovered(char)">{{capitalize(char)}}</p>
             </Transition>
           </v-sheet>
+          <span v-else style="padding-left:30px;"/>
         </span>
       </v-row>
     </v-container>
@@ -256,6 +262,6 @@ export default {
   font-size: 0;
 }
 span {
-  font-size: 32pt;
+  font-size: 54pt;
 }
 </style>
