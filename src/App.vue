@@ -183,7 +183,7 @@ export default {
 
     <v-container>
       <v-row justify="center">
-        <v-sheet width="550" elevation="5" class="text-center">
+        <v-sheet width="900" elevation="5" class="text-center">
             <span v-for="c in alphabet" :key="c" style="padding-left:10px;">
               <Transition name="text-size">
                 <span v-if="!isCharDiscovered(c)">{{c}}</span>
@@ -198,7 +198,7 @@ export default {
    <v-container>
      <v-row justify="center">
         <span v-for="(char,index) in currentText" :key="index" style="padding-left:15px;">
-          <v-sheet v-if="char !== ' '" elevation="5" height="30" width="30" class="text-center" style="padding: 10% 0">
+          <v-sheet v-if="char !== ' '" elevation="5" height="70" width="70" class="text-center" style="padding: 5% 0">
             <Transition name="text-size">
               <p v-if="isCharDiscovered(char)">{{char}}</p>
             </Transition>
@@ -226,9 +226,6 @@ export default {
       </v-row>
     </v-container>
 
-
-
-
     <input type="file" ref="textInput" accept=".json" style="display: none;" @change="loadTextFile"/>
   </v-main>
   </v-app>
@@ -243,5 +240,8 @@ export default {
 .text-size-enter-from,
 .text-size-leave-to {
   font-size: 0;
+}
+span {
+  font-size: 32pt;
 }
 </style>
