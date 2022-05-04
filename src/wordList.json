@@ -1,0 +1,18 @@
+[
+    { 
+        "theme": "liste", 
+        "words" : "bonjour ceci est une liste de mot" 
+    },
+    {
+        "theme": "oiseau",
+        "words" : "elle est très chouette"
+    },
+    {
+        "theme": "FETE DES MAJUSCULES",
+        "words" : "VOUS POUVEZ MEME METTRE EN MAJUSCULE"
+    },
+    {
+        "theme": "asile ?",
+        "words" : "C LA FOLIE"
+    }
+]
